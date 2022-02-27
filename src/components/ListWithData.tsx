@@ -15,13 +15,13 @@ import Headline from '../ui/Headline';
 import COLORS from '../constants/colors';
 
 const ListWithData = () => {
-  const ITEM_HEIGHT = 170;
-  const POST_PER_LOAD = 30;
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [startAfter, setStartAfter] = useState(0);
-  const [lastPost, setLastPost] = useState(false);
-  const bottomLineColor = useSharedValue(COLORS.acPrimary);
+  const ITEM_HEIGHT: number = 170;
+  const POST_PER_LOAD: number = 30;
+  const [posts, setPosts] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [startAfter, setStartAfter] = useState<number>(0);
+  const [lastPost, setLastPost] = useState<boolean>(false);
+  const bottomLineColor = useSharedValue<string>(COLORS.acPrimary);
   const scrollY = useSharedValue(0);
 
   // FlatList functions
@@ -97,7 +97,7 @@ const ListWithData = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={getMorePosts}
         onEndReachedThreshold={0.5}
-        // scrollEventThrottle={150}
+        scrollEventThrottle={1} // для более плавной анимации на ios, но можно увеличить в пользу производительности
         ListFooterComponent={lastPost ? null : <ActivityIndicator />}
         getItemLayout={getItemLayout}
         onScroll={onScroll}

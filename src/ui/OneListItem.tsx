@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   Dimensions,
 } from 'react-native';
 
@@ -11,7 +10,7 @@ import COLORS from '../constants/colors';
 
 const { width } = Dimensions.get('window');
 
-const OneListItem = ({ text }) => {
+const OneListItem = ({ text }: { text: string }) => {
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.7}>
       <Text style={styles.textStyle}>{text}</Text>
@@ -36,4 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OneListItem;
+export default React.memo(OneListItem);

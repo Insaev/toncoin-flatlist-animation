@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 
 import ListWithData from '../components/ListWithData';
 import COLORS from '../constants/colors';

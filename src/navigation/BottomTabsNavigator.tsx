@@ -17,8 +17,6 @@ const BottomTabsNavigator = () => {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         headerShown: false,
-        // tabBarActiveTintColor: '#58ceb2',
-        // tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           ...styles.container,
         },
@@ -30,7 +28,6 @@ const BottomTabsNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View>
-              {/* <ProfileIcon focused={focused} /> */}
               <Text>Home</Text>
             </View>
           ),
@@ -42,7 +39,6 @@ const BottomTabsNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View>
-              {/* <ProfileIcon focused={focused} /> */}
               <Text>Change</Text>
             </View>
           ),
@@ -54,7 +50,6 @@ const BottomTabsNavigator = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View>
-              {/* <ProfileIcon focused={focused} /> */}
               <Text>Settings</Text>
             </View>
           ),

@@ -1,4 +1,4 @@
-const bipSmall = [
+const bipSmall: Array<string> = [
   'abandon',
   'ability',
   'able',

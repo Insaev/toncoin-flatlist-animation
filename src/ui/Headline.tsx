@@ -1,29 +1,23 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
 
 import COLORS from '../constants/colors';
 
-const screenWidth = Dimensions.get('window').width;
+interface HeadlineProps {
+  scrollY: Animated.SharedValue<number>;
+}
 
-const Headline = ({ scrollY }) => {
-  const animatedFontSize = useAnimatedStyle(() => {
-    const fontSize = interpolate(
-      scrollY.value,
-      [0, 200],
-      [30, 20],
-      Extrapolate.CLAMP
-    );
-
-    return {
-      fontSize,
-    };
-  });
+const Headline = ({ scrollY }: HeadlineProps) => {
+  const titleWidth = useSharedValue(0);
+  const headerWidth = useSharedValue(0);
+  const headerHeight = useSharedValue(0);
 
   const animatedBottomLine = useAnimatedStyle(() => {
     const borderBottomColor = interpolateColor(
@@ -37,7 +31,7 @@ const Headline = ({ scrollY }) => {
     };
   });
 
-  const animatedHeight = useAnimatedStyle(() => {
+  const animatedHeaderHeight = useAnimatedStyle(() => {
     const height = interpolate(
       scrollY.value,
       [0, 200],
@@ -50,27 +44,49 @@ const Headline = ({ scrollY }) => {
     };
   });
 
-  const animatedTranslateXandY = useAnimatedStyle(() => {
-    const width = interpolate(
+  const animatedLogoTranslateXandY = useAnimatedStyle(() => {
+    const bottom = interpolate(
       scrollY.value,
       [0, 200],
-      [screenWidth * 0.9 - 95, 0],
+      [0, headerHeight.value / 2 - 10],
+      Extrapolate.CLAMP
+    );
+
+    const left = interpolate(
+      scrollY.value,
+      [0, 200],
+      [25, (headerWidth.value - titleWidth.value) / 2],
+      Extrapolate.CLAMP
+    );
+
+    const fontSize = interpolate(
+      scrollY.value,
+      [0, 200],
+      [30, 20],
       Extrapolate.CLAMP
     );
 
     return {
-      width,
+      bottom,
+      left,
+      fontSize,
     };
   });
 
   return (
     <Animated.View
-      style={[styles.container, animatedBottomLine, animatedHeight]}
+      style={[styles.container, animatedBottomLine, animatedHeaderHeight]}
+      onLayout={(e) => {
+        headerWidth.value = e.nativeEvent.layout.width;
+        headerHeight.value = e.nativeEvent.layout.height;
+      }}
     >
-      <Animated.Text style={[styles.header, animatedFontSize]}>
+      <Animated.Text
+        style={[styles.header, animatedLogoTranslateXandY]}
+        onLayout={(e) => (titleWidth.value = e.nativeEvent.layout.width)}
+      >
         Wallet
       </Animated.Text>
-      <Animated.View style={[animatedTranslateXandY]} />
     </Animated.View>
   );
 };
@@ -86,7 +102,9 @@ const styles = StyleSheet.create({
   header: {
     color: COLORS.fgPrimary,
     fontWeight: 'bold',
-    paddingBottom: 5,
+    position: 'absolute',
+    bottom: 0,
+    left: 25,
   },
 });
 

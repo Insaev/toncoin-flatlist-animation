@@ -1,4 +1,14 @@
-const COLORS = {
+interface ColorsInterface {
+  readonly bgPrimary: string;
+  readonly bgSecondary: string;
+  readonly bgQuaternary: string;
+  readonly bgTertiary: string;
+  readonly fgPrimary: string;
+  readonly fgSecondary: string;
+  readonly acPrimary: string;
+}
+
+const COLORS: ColorsInterface = {
   bgPrimary: '#151C29',
   bgSecondary: '#222B3D',
   bgQuaternary: '#343E52',
