@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -18,9 +18,9 @@ const ListWithData = () => {
   const ITEM_HEIGHT: number = 170;
   const POST_PER_LOAD: number = 30;
   const [posts, setPosts] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); //! лучше использовать useRef
-  const [startAfter, setStartAfter] = useState<number>(0); //! лучше использовать useRef
-  const [lastPost, setLastPost] = useState<boolean>(false); //! лучше использовать useRef
+  const loading = useRef<boolean>(true);
+  const startAfter = useRef<number>(0);
+  const lastPost = useRef<boolean>(false);
   const bottomLineColor = useSharedValue<string>(COLORS.acPrimary);
   const scrollY = useSharedValue(0);
 
@@ -40,19 +40,24 @@ const ListWithData = () => {
 
   // Getters functions
   const getPosts = useCallback(() => {
-    setLoading(true);
+    loading.current = true;
     const postsData = bipSmall.slice(0, POST_PER_LOAD);
     setPosts((prevState) => [...prevState, ...postsData]);
-    setStartAfter(POST_PER_LOAD);
-    setLoading(false);
+    startAfter.current = POST_PER_LOAD;
+    loading.current = false;
   }, []);
 
   const getMorePosts = useCallback(() => {
     if (!lastPost) {
-      const postsData = bipSmall.slice(startAfter, startAfter + POST_PER_LOAD);
+      const postsData = bipSmall.slice(
+        startAfter.current,
+        startAfter.current + POST_PER_LOAD
+      );
       setPosts((prevState) => [...prevState, ...postsData]);
-      setStartAfter(startAfter + POST_PER_LOAD);
-      postsData.length === 0 ? setLastPost(true) : setLastPost(false);
+      startAfter.current = startAfter.current + POST_PER_LOAD;
+      postsData.length === 0
+        ? (lastPost.current = true)
+        : (lastPost.current = false);
     }
   }, [startAfter]);
 
@@ -82,7 +87,7 @@ const ListWithData = () => {
     getPosts();
   }, []);
 
-  if (loading) {
+  if (loading.current) {
     return <ActivityIndicator />;
   }
 
@@ -98,7 +103,7 @@ const ListWithData = () => {
         onEndReached={getMorePosts}
         onEndReachedThreshold={0.5}
         scrollEventThrottle={1} // для более плавной анимации на ios, но можно увеличить в пользу производительности
-        ListFooterComponent={lastPost ? null : <ActivityIndicator />}
+        ListFooterComponent={lastPost.current ? null : <ActivityIndicator />}
         getItemLayout={getItemLayout}
         onScroll={onScroll}
       />
