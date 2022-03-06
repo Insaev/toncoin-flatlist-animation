@@ -18,9 +18,9 @@ const ListWithData = () => {
   const ITEM_HEIGHT: number = 170;
   const POST_PER_LOAD: number = 30;
   const [posts, setPosts] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [startAfter, setStartAfter] = useState<number>(0);
-  const [lastPost, setLastPost] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); //! лучше использовать useRef
+  const [startAfter, setStartAfter] = useState<number>(0); //! лучше использовать useRef
+  const [lastPost, setLastPost] = useState<boolean>(false); //! лучше использовать useRef
   const bottomLineColor = useSharedValue<string>(COLORS.acPrimary);
   const scrollY = useSharedValue(0);
 
@@ -39,22 +39,22 @@ const ListWithData = () => {
   );
 
   // Getters functions
-  const getPosts = () => {
+  const getPosts = useCallback(() => {
     setLoading(true);
     const postsData = bipSmall.slice(0, POST_PER_LOAD);
     setPosts((prevState) => [...prevState, ...postsData]);
     setStartAfter(POST_PER_LOAD);
     setLoading(false);
-  };
+  }, []);
 
-  const getMorePosts = () => {
+  const getMorePosts = useCallback(() => {
     if (!lastPost) {
       const postsData = bipSmall.slice(startAfter, startAfter + POST_PER_LOAD);
       setPosts((prevState) => [...prevState, ...postsData]);
       setStartAfter(startAfter + POST_PER_LOAD);
       postsData.length === 0 ? setLastPost(true) : setLastPost(false);
     }
-  };
+  }, [startAfter]);
 
   // Animation functions
   const onScroll = useAnimatedScrollHandler({
